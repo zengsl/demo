@@ -9,13 +9,13 @@ import java.util.*;
  */
 public class MeetingTest {
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         new MeetingTest().start();
     }
 
-    /**
+    *//**
      * 最大连续计算次数
-     */
+     *//*
     private final static int MAX_CONSECUTIVE_NUM = 2;
 
     public void start() {
@@ -78,14 +78,14 @@ public class MeetingTest {
         printMap(frequencyResult2);
     }
 
-    /**
+    *//**
      * 分析数组中每个元素出现的次数
      *
      * @param elements 待计算的数组
      * @return Map<String, Integer>,将数组中的元素作为key,元素在数组中出现的次数为value返回。
      * @author zengsl
      * @date 2019-10-8 21:20
-     */
+     *//*
     private Map<String, Integer> analyzeElementFrequency(List<String> elements) {
         if (elements == null || elements.isEmpty()) {
             return null;
@@ -98,7 +98,7 @@ public class MeetingTest {
         return frequencyResult;
     }
 
-    /**
+    *//**
      * 从集合中抓取数量第sortNum多的元素，如果抓取完了之后元素的数量将减少1个
      *
      * @param frequencyResult 存放元素和数量对应关系的集合
@@ -108,7 +108,7 @@ public class MeetingTest {
      * @throws
      * @author zengsl
      * @date 2019-10-8 21:22
-     */
+     *//*
     private String grabElement(Map<String, Integer> frequencyResult, String avoidElement, int sortNum) {
         // 从map集合中,根据value值排序,获取对应sortNum排序位的entry
         Map.Entry<String,Integer> maxValueEntry = getEntryByMaxValueSort(frequencyResult, sortNum);
@@ -135,7 +135,7 @@ public class MeetingTest {
         return nextMaxElement == null ? currentElement : nextMaxElement;
     }
 
-    /**
+    *//**
      * 从集合中获取第sortNum大的值
      *
      * @param map     待获取数据的集合
@@ -143,12 +143,12 @@ public class MeetingTest {
      * @return
      * @author zengsl
      * @date 2019-10-8 21:20
-     */
+     *//*
     public static Object getKeyByMaxValueSort(Map<String, Integer> map, int sortNum) {
         return getEntryByMaxValueSort(map,sortNum).getKey();
     }
 
-    /**
+    *//**
      * 从集合中获取第sortNum大的值的entry
      *
      * @param map     待获取数据的集合
@@ -156,7 +156,7 @@ public class MeetingTest {
      * @return Map.Entry<String, Integer>
      * @author zengsl
      * @date 2019-10-8 21:20
-     */
+     *//*
     public static Map.Entry<String, Integer> getEntryByMaxValueSort(Map<String, Integer> map, int sortNum) {
         if (map == null) {
             return null;
@@ -176,17 +176,17 @@ public class MeetingTest {
 
     }
 
-    /**
+    *//**
      * 打印map集合
 
      * @param map 待打印的map集合
      * @return void
      * @author zengsl
      * @date 2019-10-8 23:19
-     */
+     *//*
     void printMap(Map<String,Integer>map) {
         for(String key : map.keySet()) {
             System.out.println(key + ":" + map.get(key));
         }
-    }
+    }*/
 }
