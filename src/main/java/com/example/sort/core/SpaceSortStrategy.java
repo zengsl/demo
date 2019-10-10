@@ -31,7 +31,7 @@ public class SpaceSortStrategy implements MatrixSortStrategy {
         for (List<String> element : elements) {
             int currentRoomSize = element.size();
             Map<String, Integer> frequencyResult = analyzeElementFrequency(element);
-            List<String> tmpList = sortMeetingRoom(currentRoomSize, frequencyResult, sortResults);
+            List<String> tmpList = sortMatrixRow(currentRoomSize, frequencyResult, sortResults);
             sortResults.add(tmpList);
             System.out.println("-------------------------------");
         }
@@ -40,18 +40,21 @@ public class SpaceSortStrategy implements MatrixSortStrategy {
 
 
     /**
-     * 计算单一会场中答辩地点排列结果
+     * 对矩阵一行中数据进行排列
      *
-     * @param elementSize 会场项目数
-     * @param frequencyResult 会场中 各个答辩地点的数量分布情况
-     * @param sortResults 已经计算好的会场答辩地点排列结果
-     * @return List<String>单一会场排列结果
+     * @param elementSize 每行中的元素大小
+     * @param frequencyResult 每行中各个值和出现的次数关系
+     * @param sortResults 已经计算好的矩阵每行中数据进行排列结果集合，是当前行之前行的排列结果的集合
+     * @return List<String>矩阵当前行数据排列结果
      * @author zsl
      * @date 2019/10/10 11:59
      */
-    private List<String> sortMeetingRoom(int elementSize, Map<String, Integer> frequencyResult, List<List<String>> sortResults) {
+    private List<String> sortMatrixRow(int elementSize, Map<String, Integer> frequencyResult, List<List<String>> sortResults) {
+        // 某元素连续出现次数
         int consecutiveCount = 0;
+        // 上一次出现的元素
         String lastElement = null;
+        // avoidElement需规避的元素 ，currentElement当前元素
         String avoidElement, currentElement = null;
         List<String> sortResult = new ArrayList<String>(elementSize);
         for (int i = 0; i < elementSize; i++) {
@@ -63,9 +66,10 @@ public class SpaceSortStrategy implements MatrixSortStrategy {
                 avoidElement = null;
             }
 
+            // 是否与矩阵中在相同纵坐标的这一列的元素值有重复
             boolean isConflict = false;
+            // 获取数据大小的参考值,为1表示取最大的，为2表示取第二大的，依次类推
             int sortNum = 0;
-
             while (true) {
                 ++sortNum;
                 // 当前待排列的数组中的任意一个元素与与之前排好序的数组，相同坐标位置的元素都有冲突，则结束本次循环。
@@ -118,7 +122,7 @@ public class SpaceSortStrategy implements MatrixSortStrategy {
      * 从集合中抓取数量第sortNum多的元素，如果抓取完了之后元素的数量将减少1个
      *
      * @param frequencyResult 存放元素和数量对应关系的集合
-     * @param avoidElement    需排除的元素。如果该参数有值，且集合中数量最多的元素是此元素，那么将继续计算获取下一个数量最多的元素 TODO 可能需要兼容多个规避值
+     * @param avoidElement    需排除的元素。如果该参数有值，且集合中数量最多的元素是此元素，那么将继续计算获取下一个数量最多的元素
      * @param sortNum         排序号 为大于1的数字 1表示获取值最大的key,2表示取值为第二大的元素的key 以此类推
      * @return String 返回抓取到的数据
      * @author zengsl
