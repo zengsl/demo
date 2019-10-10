@@ -79,9 +79,8 @@ public class SpaceSortStrategy implements MatrixSortStrategy {
                 }
                 int sortResultsSize = sortResults.size();
                 int loopCount = 0;
-                for (int j = 0; j < sortResultsSize; j++) {
+                for (List<String> oldSortResult : sortResults) {
                     loopCount++;
-                    List<String> oldSortResult = sortResults.get(j);
                     // 若出现和已排序数组相同坐标的值相同的情况
                     isConflict = (i + 1) <= oldSortResult.size() && currentElement.equals(oldSortResult.get(i));
                     if (isConflict) {
