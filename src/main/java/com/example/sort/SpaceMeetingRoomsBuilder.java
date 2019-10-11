@@ -4,7 +4,9 @@ import com.example.sort.core.MatrixSortStrategy;
 import com.example.sort.core.SpaceSortStrategy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 使用矩阵间隔排序策略排列出会场的时间表
@@ -49,11 +51,13 @@ public class SpaceMeetingRoomsBuilder extends BaseMeetingRoomsBuilder {
         areas3.add("A");
         areas3.add("A");
 
-        List<List<String>> meetingRooms = new ArrayList<>();
-        meetingRooms.add(areas);
-        meetingRooms.add(areas2);
-        meetingRooms.add(areas3);
+        Map<String,List<String>> meetingRooms = new HashMap<>(3);
+        meetingRooms.put("room1_group1",areas);
+        meetingRooms.put("room1_group2",areas2);
+        meetingRooms.put("room2_group2",areas3);
+
         MeetingRoomsBuilder builder = new SpaceMeetingRoomsBuilder();
         builder.build(meetingRooms,null);
+
     }
 }

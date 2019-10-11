@@ -1,6 +1,7 @@
 package com.example.sort;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 会场生成器
@@ -17,5 +18,5 @@ public interface MeetingRoomsBuilder {
      * @param rooms 多个会场集合，每个会场中存放当前会场所有的答辩会场名称
      * @param currentMeeting 当前会场标识
      */
-    void build(List<List<String>> rooms, String currentMeeting);
+    void build(Map<String,List<String>> rooms, String currentMeeting);
 }

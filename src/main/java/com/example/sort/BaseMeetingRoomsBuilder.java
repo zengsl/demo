@@ -3,6 +3,7 @@ package com.example.sort;
 import com.example.sort.core.MatrixSortStrategy;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 会场生产器基础类
@@ -15,9 +16,18 @@ abstract public class BaseMeetingRoomsBuilder implements MeetingRoomsBuilder {
 
 
     @Override
-    public void build(List<List<String>> rooms, String currentMeeting) {
+    public void build(Map<String,List<String>> rooms, String currentMeeting) {
         convertArea2Room(rooms);
-        List<List<String>> sortResult = getMatrixSortStrategy().doOperate(rooms);
+        Map<String,List<String>> sortResult = getMatrixSortStrategy().doOperate(rooms);
+
+        for(Map.Entry<String,List<String>> entry : sortResult.entrySet()) {
+            String key = entry.getKey();
+            for(String roomName : entry.getValue()) {
+                System.out.println(key + ":" + roomName);
+            }
+            System.out.println("************************************");
+        }
+
         generateSchedule(sortResult);
     }
 
@@ -26,16 +36,16 @@ abstract public class BaseMeetingRoomsBuilder implements MeetingRoomsBuilder {
      *
      * @param areas 归属地
      */
-    private void convertArea2Room(List<List<String>> areas) {
+    private void convertArea2Room(Map<String,List<String>> areas) {
         // TODO 将归属地转换为对应的答辩会场
     }
 
     /**
-     * 生成会场排课时间摈弃持久化
+     * 生成会场排课时间并且持久化
      *
      * @param sortResult 会场中场地的有序排列结果
      */
-    private void generateSchedule(List<List<String>> sortResult) {
+    private void generateSchedule(Map<String,List<String>> sortResult) {
 
         // TODO 计算时间周期
         // TODO 持久化数据库
