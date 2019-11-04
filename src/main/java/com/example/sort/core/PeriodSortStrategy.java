@@ -20,9 +20,10 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
 
 
     @Override
-    public Map<String, List<String>> doOperate(Map<String, List<String>> elements) {
+    public Map<String, LinkedHashMap<Date,String>> doOperate(Map<String, List<String>> elements) {
 
-        List<List<String>> sortResults = new ArrayList<List<String>>();
+        Map<String, LinkedHashMap<Date,String>> results = new HashMap<String, LinkedHashMap<Date,String>>();
+        List<LinkedHashMap<Date,String>> sortResults = new ArrayList<LinkedHashMap<Date,String>>();
         for (Map.Entry<String, List<String>> entry : elements.entrySet()) {
             List<String> element = entry.getValue();
             String currentKey = entry.getKey();
@@ -51,12 +52,12 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
 
             int currentRoomSize = element.size();
             Map<String, Integer> frequencyResult = analyzeElementFrequency(element);
-            List<String> tmpList = sortMatrixRow(currentRoomSize, frequencyResult, sortResults, mStartTime,mEndTime,aStartTime,aEndTime,mornPeriod,afterPeriod);
+            LinkedHashMap<Date,String> tmpList = sortMatrixRow(currentRoomSize, frequencyResult, sortResults, mStartTime,mEndTime,aStartTime,aEndTime,mornPeriod,afterPeriod);
             sortResults.add(tmpList);
-            elements.put(roomKey, tmpList);
+            results.put(roomKey, tmpList);
             System.out.println("-------------------------------");
         }
-        return elements;
+        return results;
     }
 
 
@@ -70,14 +71,17 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
      * @author zsl
      * @date 2019/10/10 11:59
      */
-    private List<String> sortMatrixRow(int elementSize, Map<String, Integer> frequencyResult, List<List<String>> sortResults,Date mornStartTime,Date mornEndTime,Date afterStartTime,Date afterEndTime,int mornPeriod,int afterPeriod) {
+    private LinkedHashMap<Date,String> sortMatrixRow(int elementSize, Map<String, Integer> frequencyResult, List<LinkedHashMap<Date,String>> sortResults,Date mornStartTime,Date mornEndTime,Date afterStartTime,Date afterEndTime,int mornPeriod,int afterPeriod) {
         // 某元素连续出现次数
         int consecutiveCount = 0;
         // 上一次出现的元素
         String lastElement = null;
         // avoidElement需规避的元素 ，currentElement当前元素
         String avoidElement, currentElement = null;
-        List<String> sortResult = new ArrayList<String>(elementSize);
+        LinkedHashMap<Date,String> sortResult = new LinkedHashMap<>(elementSize);
+        boolean isMorning = false;
+        Date startTime = null, endTime=null;
+        int period = mornPeriod;
         for (int i = 0; i < elementSize; i++) {
 
             if (consecutiveCount >= SpaceSortConstants.MAX_CONSECUTIVE_NUM) {
@@ -102,7 +106,8 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
                 if (currentElement == null) {
                     break;
                 }
-                int sortResultsSize = sortResults.size();
+                // TODO
+                /*int sortResultsSize = sortResults.size();
                 int loopCount = 0;
                 for (List<String> oldSortResult : sortResults) {
                     loopCount++;
@@ -115,8 +120,31 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
                 // 若与之前排好序的数组，相同坐标上都没有冲突则表示获取到的该当前元素可以使用
                 if (loopCount == sortResultsSize && !isConflict) {
                     break;
-                }
+                }*/
             }
+
+            // 计算时间
+            startTime = (startTime == null) ? mornStartTime : endTime;
+            endTime = DateUtils.nextMinutes(startTime, period);
+            // 根据时间段判断起止时间是否合理
+            if(isMorning && DateUtils.compare(endTime,mornEndTime) > 0) {
+                isMorning = false;
+                period = afterPeriod;
+                startTime = afterStartTime;
+                endTime = DateUtils.nextMinutes(startTime, period);
+            } else if(!isMorning && DateUtils.compare(endTime,afterEndTime) > 0) {
+                // 下午时间排满之后需要从第二天计算时间
+                mornStartTime = DateUtils.nextDays(mornStartTime,1);
+                mornEndTime  = DateUtils.nextDays(mornEndTime,1);
+                afterStartTime = DateUtils.nextDays(afterStartTime,1);
+                afterEndTime = DateUtils.nextDays(afterEndTime,1);
+                isMorning = true;
+                period = mornPeriod;
+                startTime = mornStartTime;
+                endTime = DateUtils.nextMinutes(startTime, period);
+            }
+
+
 
             if (isConflict) {
                 currentElement = SpaceSortConstants.CONFLICT_PLACE_HOLDER;
@@ -124,7 +152,7 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
             } else {
                 decreaseFrequency(frequencyResult, currentElement);
             }
-            sortResult.add(currentElement);
+            // sortResult.put(currentElement); // TODO
             System.out.println("currentElement:" + currentElement);
 
             // 如果和上次数据相同则次数加1

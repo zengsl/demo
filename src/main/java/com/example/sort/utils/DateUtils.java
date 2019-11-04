@@ -202,6 +202,14 @@ public class DateUtils {
 		return cloneCalendar.getTime();
 	}
 
+	public static Date nextMinutes(Date date, int nextMinute) {
+		GregorianCalendar c1 = new GregorianCalendar();
+		c1.setTime(date);
+		GregorianCalendar cloneCalendar = (GregorianCalendar) c1.clone();
+		cloneCalendar.add(Calendar.MINUTE, nextMinute);
+		return cloneCalendar.getTime();
+	}
+
 	public static Date preMonths(Date date, int preMonth) {
 		GregorianCalendar c1 = new GregorianCalendar();
 		c1.setTime(date);

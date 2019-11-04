@@ -80,7 +80,7 @@ public class PeriodMeetingRoomsBuilder extends BaseMeetingRoomsBuilder {
 
 
         MeetingRoomsBuilder builder = new PeriodMeetingRoomsBuilder();
-//        builder.build(meetingRooms);
+       builder.build(meetingRooms);
 
     }
 }
