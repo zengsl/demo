@@ -1,7 +1,7 @@
-package com.example.sort;
+package com.example.sort2;
 
-import com.example.sort.core.MatrixSortStrategy;
-import com.example.sort.core.PeriodSortStrategy;
+import com.example.sort2.core.MatrixSortStrategy;
+import com.example.sort2.core.SpaceSortStrategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ public class SpaceMeetingRoomsBuilder extends BaseMeetingRoomsBuilder {
 
     @Override
     public MatrixSortStrategy getMatrixSortStrategy() {
-        return new PeriodSortStrategy();
+        return new SpaceSortStrategy();
     }
 
     public static void main(String[] args) {
@@ -52,12 +52,12 @@ public class SpaceMeetingRoomsBuilder extends BaseMeetingRoomsBuilder {
         areas3.add("A");
 
         Map<String,List<String>> meetingRooms = new HashMap<>(3);
-        meetingRooms.put("room1_group1_20191104_0800_1100_30_1400_1600_35", areas);
-        meetingRooms.put("room1_group2_20191104_0800_1100_30_1400_1600_35", areas2);
-        meetingRooms.put("room2_group2_20191104_0800_1100_30_1400_1600_35", areas3);
+        meetingRooms.put("room1_group1", areas);
+        meetingRooms.put("room1_group2", areas2);
+        meetingRooms.put("room2_group2", areas3);
 
         MeetingRoomsBuilder builder = new SpaceMeetingRoomsBuilder();
-        builder.build(meetingRooms);
+        builder.build(meetingRooms,null);
 
     }
 }

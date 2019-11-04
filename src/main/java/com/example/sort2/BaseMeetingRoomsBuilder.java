@@ -1,10 +1,9 @@
-package com.example.sort;
+package com.example.sort2;
 
-import com.example.sort.core.MatrixSortStrategy;
+import com.example.sort2.core.MatrixSortStrategy;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 会场生产器基础类
@@ -17,7 +16,7 @@ abstract public class BaseMeetingRoomsBuilder implements MeetingRoomsBuilder {
 
 
     @Override
-    public void build(Map<String,List<String>> rooms) {
+    public void build(Map<String,List<String>> rooms, String currentMeeting) {
         convertArea2Room(rooms);
         Map<String,List<String>> sortResult = getMatrixSortStrategy().doOperate(rooms);
 

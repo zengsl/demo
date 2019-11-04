@@ -1,6 +1,7 @@
 package com.example.sort.core;
 
 import com.example.sort.constants.SpaceSortConstants;
+import com.example.sort.utils.DateUtils;
 
 import java.util.*;
 
@@ -15,21 +16,44 @@ import java.util.*;
  * @version V1.0
  * @date 2019/10/10 15:29
  */
-public class SpaceSortStrategy implements MatrixSortStrategy {
+public class PeriodSortStrategy implements MatrixSortStrategy {
 
 
     @Override
-    public Map<String,List<String>> doOperate(Map<String,List<String>> elements) {
+    public Map<String, List<String>> doOperate(Map<String, List<String>> elements) {
 
         List<List<String>> sortResults = new ArrayList<List<String>>();
-        for (Map.Entry<String, List<String>> entry: elements.entrySet()) {
+        for (Map.Entry<String, List<String>> entry : elements.entrySet()) {
             List<String> element = entry.getValue();
             String currentKey = entry.getKey();
+            String[] params = currentKey.split("_");
+            String roomKey = params[0] + "_" + params[1];
+            Date startDate = DateUtils.toDate(params[2]);
+            String []mornStartTimeParams = params[3].split(":");
+            Date mSth = DateUtils.setHour(startDate,Integer.parseInt(mornStartTimeParams[0]));
+            Date mStartTime = DateUtils.setMinute(mSth,Integer.parseInt(mornStartTimeParams[1]));
+
+            String []mornEndTimeParams = params[4].split(":");
+            Date mEth = DateUtils.setHour(startDate,Integer.parseInt(mornEndTimeParams[0]));
+            Date mEndTime = DateUtils.setMinute(mEth,Integer.parseInt(mornEndTimeParams[1]));
+
+            String []afterStartTimeParams = params[6].split(":");
+            Date aSth = DateUtils.setHour(startDate,Integer.parseInt(afterStartTimeParams[0]));
+            Date aStartTime = DateUtils.setHour(aSth,Integer.parseInt(afterStartTimeParams[1]));
+
+            String []afterEndTimeParams = params[7].split(":");
+            Date aEth = DateUtils.setHour(startDate,Integer.parseInt(afterEndTimeParams[0]));
+            Date aEndTime = DateUtils.setHour(aEth,Integer.parseInt(afterEndTimeParams[1]));
+
+            int mornPeriod = Integer.parseInt(params[5]);
+            int afterPeriod = Integer.parseInt(params[8]);
+
+
             int currentRoomSize = element.size();
             Map<String, Integer> frequencyResult = analyzeElementFrequency(element);
-            List<String> tmpList = sortMatrixRow(currentRoomSize, frequencyResult, sortResults);
+            List<String> tmpList = sortMatrixRow(currentRoomSize, frequencyResult, sortResults, mStartTime,mEndTime,aStartTime,aEndTime,mornPeriod,afterPeriod);
             sortResults.add(tmpList);
-            elements.put(currentKey,tmpList);
+            elements.put(roomKey, tmpList);
             System.out.println("-------------------------------");
         }
         return elements;
@@ -46,7 +70,7 @@ public class SpaceSortStrategy implements MatrixSortStrategy {
      * @author zsl
      * @date 2019/10/10 11:59
      */
-    private List<String> sortMatrixRow(int elementSize, Map<String, Integer> frequencyResult, List<List<String>> sortResults) {
+    private List<String> sortMatrixRow(int elementSize, Map<String, Integer> frequencyResult, List<List<String>> sortResults,Date mornStartTime,Date mornEndTime,Date afterStartTime,Date afterEndTime,int mornPeriod,int afterPeriod) {
         // 某元素连续出现次数
         int consecutiveCount = 0;
         // 上一次出现的元素
@@ -182,7 +206,7 @@ public class SpaceSortStrategy implements MatrixSortStrategy {
      *
      * @param map     待获取数据的集合
      * @param sortNum 排序号 为大于1的数字 1表示获取值最大的key,2表示取值为第二大的元素的key 以此类推
-     * @return Map.Entry<String                                                               ,                                                                                                                               Integer>
+     * @return Map.Entry<String                                                                                                                               ,                                                                                                                                                                                                                                                               Integer>
      * @author zengsl
      * @date 2019-10-8 21:20
      */
@@ -207,7 +231,7 @@ public class SpaceSortStrategy implements MatrixSortStrategy {
      * 分析数组中每个元素出现的次数
      *
      * @param elements 待计算的数组
-     * @return Map<String                                                               ,                                                                                                                               Integer>,将数组中的元素作为key,元素在数组中出现的次数为value返回。
+     * @return Map<String                                                                                                                               ,                                                                                                                                                                                                                                                               Integer>,将数组中的元素作为key,元素在数组中出现的次数为value返回。
      * @author zengsl
      * @date 2019-10-8 21:20
      */
