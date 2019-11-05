@@ -153,17 +153,14 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
         String avoidElement, currentElement = null;
         List<MeetingRoom> sortResult = new ArrayList<>(elementSize);
         for (int i = 0; i < elementSize; i++) {
-
             if (consecutiveCount >= SpaceSortConstants.MAX_CONSECUTIVE_NUM) {
                 avoidElement = lastElement;
                 consecutiveCount = 0;
             } else {
                 avoidElement = null;
             }
-
             // 计算时间
             calculateNextSchedule();
-
             // 是否与矩阵中在相同纵坐标的这一列的元素值有重复
             boolean isConflict = false;
             // 获取数据大小的参考值,为1表示取最大的，为2表示取第二大的，依次类推
@@ -180,12 +177,10 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
                 if (currentElement == null) {
                     break;
                 }
-
                 int sortResultsSize = sortResults.size();
                 int loopCount = 0;
                 for (List<MeetingRoom> oldSortResult : sortResults) {
                     loopCount++;
-
                     isConflict = judgeIsConflict(currentElement, startTime, endTime, oldSortResult);
                     if (isConflict) {
                         break;
@@ -196,7 +191,6 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
                     break;
                 }
             }
-
             if (isConflict) {
                 currentElement = SpaceSortConstants.CONFLICT_PLACE_HOLDER;
                 elementSize++;
@@ -209,7 +203,6 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
             room.setEndTime(endTime);
             sortResult.add(room);
             System.out.println("currentElement:" + currentElement);
-
             // 如果和上次数据相同则次数加1
             if (currentElement != null && currentElement.equals(lastElement)) {
                 consecutiveCount++;
