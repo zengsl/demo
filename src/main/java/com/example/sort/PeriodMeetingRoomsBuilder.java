@@ -49,7 +49,7 @@ public class PeriodMeetingRoomsBuilder extends BaseMeetingRoomsBuilder {
         areas3.add("A");
         areas3.add("A");
 
-        Map<String,List<String>> meetingRooms = new HashMap<>(3);
+        Map<String,List<String>> meetingRooms = new LinkedHashMap<>(3);
         meetingRooms.put("room1_group1_2019-11-04_08:00_11:00_30_14:00_16:00_35", areas);
         meetingRooms.put("room1_group2_2019-11-04_08:00_11:00_30_14:00_16:00_35", areas2);
         meetingRooms.put("room2_group2_2019-11-04_08:00_11:00_30_14:00_16:00_35", areas3);

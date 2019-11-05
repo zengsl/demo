@@ -1,5 +1,7 @@
 package com.example.sort.core;
 
+import com.example.sort.model.MeetingRoom;
+
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,7 +21,7 @@ public interface MatrixSortStrategy {
      * 排序操作
      *
      * @param elements 待排序的矩阵
-     * @return List<List<String>> 排好序之后的矩阵
+     * @return Map<String, List<MeetingRoom>> 排好序之后的矩阵
      */
-    Map<String, LinkedHashMap<Date,String>> doOperate(Map<String,List<String>> elements);
+    Map<String, List<MeetingRoom>> doOperate(Map<String,List<String>> elements);
 }

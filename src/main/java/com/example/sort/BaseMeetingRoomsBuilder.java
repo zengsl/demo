@@ -1,7 +1,12 @@
 package com.example.sort;
 
 import com.example.sort.core.MatrixSortStrategy;
+import com.example.sort.model.MeetingRoom;
+import com.example.sort.utils.DateFormator;
+import com.example.sort.utils.DateUtils;
 
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -19,18 +24,18 @@ abstract public class BaseMeetingRoomsBuilder implements MeetingRoomsBuilder {
     @Override
     public void build(Map<String,List<String>> rooms) {
         convertArea2Room(rooms);
-        Map<String,List<String>> sortResult = getMatrixSortStrategy().doOperate(rooms);
+        Map<String, List<MeetingRoom>> sortResult = getMatrixSortStrategy().doOperate(rooms);
 
-        // TODO 临时测试用的打印代码
-        for(Map.Entry<String,List<String>> entry : sortResult.entrySet()) {
+       // TODO 临时测试用的打印代码
+        for(Map.Entry<String, List<MeetingRoom>> entry : sortResult.entrySet()) {
             String key = entry.getKey();
-            for(String roomName : entry.getValue()) {
-                System.out.println(key + ":" + roomName);
+            for(MeetingRoom room : entry.getValue()) {
+                System.out.println(key + ":" + room.getRoomName() + ":" + DateUtils.toString(room.getStartTime(), DateFormator.YEAR_MONTH_DAY_HH_MM_SS) + ":" + DateUtils.toString(room.getEndTime(), DateFormator.YEAR_MONTH_DAY_HH_MM_SS));
             }
             System.out.println("************************************");
         }
 
-        generateSchedule(sortResult);
+       // generateSchedule(sortResult);
     }
 
     /**

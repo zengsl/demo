@@ -72,7 +72,8 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
 
 
             int currentRoomSize = element.size();
-            initConfig(mStartTime, mEndTime, aStartTime, aEndTime, mornPeriod, afterPeriod);
+            // 初始化时刻表参数
+            initScheduleConfig(mStartTime, mEndTime, aStartTime, aEndTime, mornPeriod, afterPeriod);
             Map<String, Integer> frequencyResult = analyzeElementFrequency(element);
             List<MeetingRoom> tmpList = sortMatrixRow(currentRoomSize, frequencyResult, sortResults);
             sortResults.add(tmpList);
@@ -82,7 +83,17 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
         return results;
     }
 
-    private void initConfig(Date mornStartTime, Date mornEndTime, Date afterStartTime, Date afterEndTime, int mornPeriod, int afterPeriod) {
+    /**
+     * 初始化时刻表参数
+     *
+     * @param mornStartTime   上午开始时间
+     * @param mornEndTime     上午结束时间
+     * @param afterStartTime  下午开始时间
+     * @param afterEndTime    下午开始时间
+     * @param mornPeriod      上午每场评审时间
+     * @param afterPeriod     下午每场评审时间
+     */
+    private void initScheduleConfig(Date mornStartTime, Date mornEndTime, Date afterStartTime, Date afterEndTime, int mornPeriod, int afterPeriod) {
         this.mornStartTime = mornStartTime;
         this.mornEndTime = mornEndTime;
         this.afterStartTime = afterStartTime;
@@ -95,8 +106,12 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
         this.endTime = null;
     }
 
-
-    private void calNextTimeSchedule() {
+    /**
+     *  计算下一个时间计划<br/>
+     *
+     *  切换上午和下午的时间段,计算下一个可用的时间段的开始时间startTime和结束时间endTime
+     */
+    private void calculateNextSchedule() {
         startTime = (startTime == null) ? mornStartTime : endTime;
         endTime = DateUtils.nextMinutes(startTime, period);
         // 根据时间段判断起止时间是否合理
@@ -125,12 +140,6 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
      * @param elementSize     每行中的元素大小
      * @param frequencyResult 每行中各个值和出现的次数关系
      * @param sortResults     已经计算好的矩阵每行中数据进行排列结果集合，是当前行之前行的排列结果的集合
-     * @param mornStartTime   上午开始时间
-     * @param mornEndTime     上午结束时间
-     * @param afterStartTime  下午开始时间
-     * @param afterEndTime    下午开始时间
-     * @param mornPeriod      上午每场评审时间
-     * @param afterPeriod     下午每场评审时间
      * @return List<MeetingRoom>矩阵当前行数据排列结果
      * @author zsl
      * @date 2019/10/10 11:59
@@ -143,9 +152,6 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
         // avoidElement需规避的元素 ，currentElement当前元素
         String avoidElement, currentElement = null;
         List<MeetingRoom> sortResult = new ArrayList<>(elementSize);
-        boolean isMorning = true;
-
-        int period = mornPeriod;
         for (int i = 0; i < elementSize; i++) {
 
             if (consecutiveCount >= SpaceSortConstants.MAX_CONSECUTIVE_NUM) {
@@ -156,26 +162,7 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
             }
 
             // 计算时间
-            calNextTimeSchedule();
-            /*startTime = (startTime == null) ? mornStartTime : endTime;
-            endTime = DateUtils.nextMinutes(startTime, period);
-            // 根据时间段判断起止时间是否合理
-            if(isMorning && DateUtils.compare(endTime,mornEndTime) > 0) {
-                isMorning = false;
-                period = afterPeriod;
-                startTime = afterStartTime;
-                endTime = DateUtils.nextMinutes(startTime, period);
-            } else if(!isMorning && DateUtils.compare(endTime,afterEndTime) > 0) {
-                // 下午时间排满之后需要从第二天计算时间
-                mornStartTime = DateUtils.nextDays(mornStartTime,1);
-                mornEndTime  = DateUtils.nextDays(mornEndTime,1);
-                afterStartTime = DateUtils.nextDays(afterStartTime,1);
-                afterEndTime = DateUtils.nextDays(afterEndTime,1);
-                isMorning = true;
-                period = mornPeriod;
-                startTime = mornStartTime;
-                endTime = DateUtils.nextMinutes(startTime, period);
-            }*/
+            calculateNextSchedule();
 
             // 是否与矩阵中在相同纵坐标的这一列的元素值有重复
             boolean isConflict = false;
@@ -271,8 +258,6 @@ public class PeriodSortStrategy implements MatrixSortStrategy {
      * @param avoidElement    需排除的元素。如果该参数有值，且集合中数量最多的元素是此元素，那么将继续计算获取下一个数量最多的元素
      * @param sortNum         排序号 为大于1的数字 1表示获取值最大的key,2表示取值为第二大的元素的key 以此类推
      * @return String 返回抓取到的数据
-     * @author zengsl
-     * @date 2019-10-8 21:22
      */
     private String grabElement(Map<String, Integer> frequencyResult, String avoidElement, int sortNum) {
         // 从map集合中,根据value值排序,获取对应sortNum排序位的entry

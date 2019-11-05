@@ -467,4 +467,20 @@ public class DateUtils {
 		System.out.println(toString(toDate(time)));
 
 	}
+	
+	/**
+	 * 存在时间重合部分
+	 * 
+	 * @param startDate1 第一个时间段开始时间
+	 * @param endDate1 第一个时间段结束时间
+	 * @param startDate2 第二个时间段开始时间
+	 * @param endDate2 第二个时间段结束时间
+	 * @return boolean true:存在重合部分  false:不存在重合部分
+	 * @author zsl
+	 * @date 2019/11/5 11:14
+	 */
+	public static boolean isOverlap(Date startDate1, Date endDate1, Date startDate2, Date endDate2) {
+
+		return (startDate1.getTime() >= startDate2.getTime() && startDate1.getTime() < endDate2.getTime()) || (endDate1.getTime() > startDate2.getTime() && endDate1.getTime() <= endDate2.getTime());
+	}
 }
