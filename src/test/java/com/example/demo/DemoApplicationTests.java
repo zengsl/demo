@@ -22,8 +22,8 @@ public class DemoApplicationTests {
         list.forEach((t) -> System.out.println(t));
     }
 
-    private int dataInitSize = 1000000;
-    int threadSize = 100000;
+    private int dataInitSize = 100;
+    int threadSize = 10;
 
     @Test
     public void testSynData() {
@@ -45,12 +45,9 @@ public class DemoApplicationTests {
         Callable<Integer> task;
         for (int i = 0; i < threadCount; i++) {
             final List<Integer> listStr = datas.subList(i * threadSize, (i + 1) * threadSize);
-            task = new Callable<Integer>() {
-                @Override
-                public Integer call() throws Exception {
-                    handleList(listStr);
-                    return null;
-                }
+            task = () -> {
+                handleList(listStr);
+                return null;
             };
             tasks.add(task);
         }
@@ -96,10 +93,11 @@ public class DemoApplicationTests {
         for (int i = 0; i < threadCount; i++) {
             final List<Integer> listStr = datas.subList(i * threadSize, (i + 1) * threadSize);
 
-            exec.submit(new Runnable() {
-                @Override
-                public void run() {
+            exec.submit(() -> {
+                try {
                     handleList(listStr);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             });
         }
@@ -111,7 +109,7 @@ public class DemoApplicationTests {
     }
 
     @Test
-    public void testSynData2() {
+    public void testSynData2() throws Exception {
         long startTime = System.currentTimeMillis();
         List<Integer> datas = new ArrayList<>();
         for (int i = 0; i < dataInitSize; i++) {
@@ -126,9 +124,10 @@ public class DemoApplicationTests {
     }
 
 
-    private void handleList(List<Integer> datas) {
+    private void handleList(List<Integer> datas) throws Exception {
         System.out.println("executing!!!!!!!!!!!!!!!!!");
         for (Integer i : datas) {
+            int z = 1 / (50 - i);
             System.out.println("CurrentThreadName:" + Thread.currentThread().getName() + " " + i);
         }
     }
